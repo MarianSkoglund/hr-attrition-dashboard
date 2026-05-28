@@ -16,10 +16,8 @@ CARD_CAPTIONS = {
 }
 
 _card = core.card
-_headcount = core.create_headcount_donut
+_donut = core.donut
 _age_distribution = core.age_distribution
-_payroll_role = core.create_payroll_role_donut
-_attrition_donut = core.create_attrition_donut
 _tenure_bar = core.tenure_bar
 _gender_age = core.gender_age
 _role_attrition = core.role_attrition
@@ -34,34 +32,26 @@ def card(title: str):
         yield
 
 
-def create_headcount_donut(df):
-    fig = _headcount(df)
-    fig.update_layout(showlegend=True, legend_title_text="Department")
+def donut(labels, values, colors, center, label, height=238, legend=False):
+    fig = _donut(labels, values, colors, center, label, height=height, legend=True)
+    if label == "Employees":
+        fig.update_layout(legend_title_text="Department")
+    elif label == "Attrition":
+        fig.update_layout(legend_title_text="Attrition Status")
+    else:
+        fig.update_layout(legend_title_text="Job Role")
     return fig
 
 
 def age_distribution(df):
     fig = _age_distribution(df)
     fig.update_layout(showlegend=True, legend_title_text="Department")
-    fig.update_traces(hovertemplate="<b>Age %{x}</b><br>Employees: %{y:,}<br>Department: %{fullData.name}<extra></extra>")
-    return fig
-
-
-def create_payroll_role_donut(df):
-    fig = _payroll_role(df)
-    fig.update_layout(showlegend=True, legend_title_text="Job Role")
-    return fig
-
-
-def create_attrition_donut(df):
-    fig = _attrition_donut(df)
-    fig.update_layout(showlegend=True, legend_title_text="Attrition Status")
     return fig
 
 
 def tenure_bar(df, column: str):
     fig = _tenure_bar(df, column)
-    fig.update_traces(hovertemplate="<b>%{x} years</b><br>Employees: %{y:,}<br>Attrition: %{fullData.name}<extra></extra>")
+    fig.update_layout(showlegend=True, legend_title_text="Attrition Status")
     return fig
 
 
@@ -89,10 +79,8 @@ def role_attrition(df):
 
 
 core.card = card
-core.create_headcount_donut = create_headcount_donut
+core.donut = donut
 core.age_distribution = age_distribution
-core.create_payroll_role_donut = create_payroll_role_donut
-core.create_attrition_donut = create_attrition_donut
 core.tenure_bar = tenure_bar
 core.gender_age = gender_age
 core.role_attrition = role_attrition
